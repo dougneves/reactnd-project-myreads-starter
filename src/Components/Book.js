@@ -1,8 +1,13 @@
 import React from 'react'
 import * as BooksAPI from '../BooksAPI'
 
-class Books extends React.Component {
+class Book extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { status: props.book.shelf || 'none' }
+  }
   shelfChanged = (bookId, shelf, title) => {
+    this.setState({ status: shelf })
     BooksAPI.update({ id: bookId }, shelf)
       .then(res => {
         if (this.props.updateMe) this.props.updateMe()
@@ -10,14 +15,20 @@ class Books extends React.Component {
       })
       .catch(err => window.alert(err))
   }
+  componentDidMount = () => {
+    //if the book did not have shelf info, get book information again using with the get API
+    if (!this.props.book.shelf)
+      BooksAPI.get(this.props.book.id)
+        .then(res => {
+          this.setState({ status: res.shelf || 'none' })
+        })
+        .catch(err => window.alert(err))
+  }
   render = () => {
     const book = this.props.book
 
     //avoid books without authors to break this component
     const authors = book.author || []
-
-    console.log(book.shelf)
-    const optionValue = book.shelf || 'none'
 
     return (
       <div className="book">
@@ -32,11 +43,11 @@ class Books extends React.Component {
           />
           <div className="book-shelf-changer">
             <select
-              defaultValue={optionValue}
+              value={this.state.status}
               onChange={e =>
                 this.shelfChanged(book.id, e.target.value, book.title)}
             >
-              <option value="none" disabled>
+              <option value="default" disabled>
                 Move to...
               </option>
               <option value="currentlyReading">Currently Reading</option>
@@ -57,4 +68,4 @@ class Books extends React.Component {
   }
 }
 
-export default Books
+export default Book

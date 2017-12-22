@@ -9,7 +9,6 @@ class BooksApp extends React.Component {
   fetchBooks = () => {
     BooksAPI.getAll()
       .then(books => {
-        console.log(books)
         this.setState({ books, fetched: true })
       })
       .catch(err => window.alert(err))
