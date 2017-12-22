@@ -28,7 +28,7 @@ class Book extends React.Component {
     const book = this.props.book
 
     //avoid books without authors to break this component
-    const authors = book.author || []
+    const authors = book.authors || []
 
     return (
       <div className="book">
