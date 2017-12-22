@@ -2,6 +2,8 @@ import React from 'react'
 
 class Books extends React.Component {
   render() {
+    const book = this.props.book
+    const authors = book.author || []
     return (
       <div className="book">
         <div className="book-top">
@@ -10,8 +12,7 @@ class Books extends React.Component {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url("${this.props.book.imageLinks
-                .smallThumbnail}")`
+              backgroundImage: `url("${book.imageLinks.smallThumbnail}")`
             }}
           />
           <div className="book-shelf-changer">
@@ -26,8 +27,8 @@ class Books extends React.Component {
             </select>
           </div>
         </div>
-        <div className="book-title">{this.props.book.title}</div>
-        {this.props.book.authors.map(author => (
+        <div className="book-title">{book.title}</div>
+        {authors.map(author => (
           <div className="book-authors" key={author}>
             {author}
           </div>
