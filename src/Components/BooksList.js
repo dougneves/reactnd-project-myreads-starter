@@ -5,13 +5,20 @@ import * as BooksAPI from '../BooksAPI'
 
 class BooksApp extends React.Component {
   state = { books: [], fetched: false }
-  componentDidMount = () => {
+
+  fetchBooks = () => {
     BooksAPI.getAll()
       .then(books => {
         console.log(books)
         this.setState({ books, fetched: true })
       })
       .catch(err => window.alert(err))
+  }
+  componentDidMount = () => {
+    this.fetchBooks()
+  }
+  updateMe = () => {
+    this.fetchBooks()
   }
   render() {
     if (!this.state.fetched) return <div>Loading...</div>
@@ -30,9 +37,17 @@ class BooksApp extends React.Component {
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          <BookShelf title="Currently Reading" books={currentlyReading} />
-          <BookShelf title="Want To Read" books={wantToRead} />
-          <BookShelf title="Read" books={read} />
+          <BookShelf
+            updateMe={this.updateMe}
+            title="Currently Reading"
+            books={currentlyReading}
+          />
+          <BookShelf
+            updateMe={this.updateMe}
+            title="Want To Read"
+            books={wantToRead}
+          />
+          <BookShelf updateMe={this.updateMe} title="Read" books={read} />
         </div>
         <div className="open-search">
           <Link to="/search">Add a book</Link>

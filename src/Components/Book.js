@@ -1,9 +1,24 @@
 import React from 'react'
+import * as BooksAPI from '../BooksAPI'
 
 class Books extends React.Component {
-  render() {
+  shelfChanged = (bookId, shelf, title) => {
+    BooksAPI.update({ id: bookId }, shelf)
+      .then(res => {
+        if (this.props.updateMe) this.props.updateMe()
+        window.alert(`Book ${title} moved to your shelf ${shelf}!`)
+      })
+      .catch(err => window.alert(err))
+  }
+  render = () => {
     const book = this.props.book
+
+    //avoid books without authors to break this component
     const authors = book.author || []
+
+    console.log(book.shelf)
+    const optionValue = book.shelf || 'none'
+
     return (
       <div className="book">
         <div className="book-top">
@@ -16,7 +31,11 @@ class Books extends React.Component {
             }}
           />
           <div className="book-shelf-changer">
-            <select>
+            <select
+              defaultValue={optionValue}
+              onChange={e =>
+                this.shelfChanged(book.id, e.target.value, book.title)}
+            >
               <option value="none" disabled>
                 Move to...
               </option>
