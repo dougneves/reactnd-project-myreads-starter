@@ -16,13 +16,23 @@ class BooksApp extends React.Component {
   render() {
     if (!this.state.fetched) return <div>Loading...</div>
 
+    const currentlyReading = this.state.books.filter(
+      book => book.shelf === 'currentlyReading'
+    )
+    const wantToRead = this.state.books.filter(
+      book => book.shelf === 'wantToRead'
+    )
+    const read = this.state.books.filter(book => book.shelf === 'read')
+
     return (
       <div className="list-books">
         <div className="list-books-title">
           <h1>MyReads</h1>
         </div>
         <div className="list-books-content">
-          <BookShelf books={this.state.books} />
+          <BookShelf title="Currently Reading" books={currentlyReading} />
+          <BookShelf title="Want To Read" books={wantToRead} />
+          <BookShelf title="Read" books={read} />
         </div>
         <div className="open-search">
           <Link to="/search">Add a book</Link>
